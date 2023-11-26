@@ -7,7 +7,7 @@
 
 ### Собран RAID 10
 
--Просмотр блочных устройств для выбора массива
+- Просмотр блочных устройств для выбора массива
 
 ```
 [vagrant@linuxraid ~]$ sudo lshw -short | grep disk
@@ -34,7 +34,7 @@ sdg      8:96   0  250M  0 disk
 ```
 [vagrant@linuxraid ~]$ sudo -i
 ```
--Обнуляем суперблоки
+- Обнуляем суперблоки
 
 ```
 [root@linuxraid ~]# mdadm --zero-superblock --force /dev/sd{b,c,d,e,f,g}
@@ -45,7 +45,7 @@ mdadm: Unrecognised md component device - /dev/sde
 mdadm: Unrecognised md component device - /dev/sdf
 mdadm: Unrecognised md component device - /dev/sdg
 ```
--Создаём новый RAID-массив
+- Создаём новый RAID-массив
 
 ```
 [root@linuxraid ~]# mdadm --create --verbose /dev/md0 -l 10 -n 6 /dev/sd{b,c,d,e,f,g}
@@ -56,7 +56,7 @@ mdadm: size set to 253952K
 mdadm: Defaulting to version 1.2 metadata
 mdadm: array /dev/md0 started.
 ```
--Проверим, что RAID собрался корректно
+- Проверим, что RAID собрался корректно
 
 ```
 [root@linuxraid ~]# cat /proc/mdstat
@@ -122,26 +122,25 @@ Consistency Policy : resync
 • Chunk Size (для RAID5) - размер блока в килобайтах, который пишется на разные диски. 
 
 ### Создание конфигурационного файла mdadm.conf
--Просмотр информации
+- Просмотр информации
 ```
 [root@linuxraid ~]# mdadm --detail --scan --verbose
 ARRAY /dev/md0 level=raid10 num-devices=6 metadata=1.2 name=linuxraid:0 UUID=90556b45:cf87085c:1d71dd41:59ea6c72
    devices=/dev/sdb,/dev/sdc,/dev/sdd,/dev/sde,/dev/sdf,/dev/sdg
 ```
--Создание файл mdadm.conf с описанием массива.
-
+- Создание файл mdadm.conf с описанием массива.
+```
 mkdir /etc/mdadm
 echo "DEVICE partitions" > /etc/mdadm/mdadm.conf
 mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> \ /etc/mdadm/mdadm.conf
-
+```
 ```
 [root@linuxraid mdadm]# cat mdadm.conf
 DEVICE partitions
 ARRAY /dev/md0 level=raid10 num-devices=6 metadata=1.2 name=linuxraid:0 UUID=90556b45:cf87085c:1d71dd41:59ea6c72
 ```
 ### Сломать/починить RAID
--Искусственно перевод в состояние fail 
-
+- Искусственно перевод в состояние fail 
 ```
 [root@linuxraid mdadm]# mdadm /dev/md0 --fail /dev/sde
 mdadm: set /dev/sde faulty in /dev/md0
@@ -150,7 +149,6 @@ Personalities : [raid10]
 md0 : active raid10 sdg[5] sdf[4] sde[3](F) sdd[2] sdc[1] sdb[0]
       761856 blocks super 1.2 512K chunks 2 near-copies [6/5] [UUU_UU]
 ```
-
 ```
 [root@linuxraid mdadm]# mdadm -D /dev/md0
 /dev/md0:
@@ -190,13 +188,11 @@ Consistency Policy : resync
        3       8       64        -      faulty   /dev/sde
 ```
 - Удаление "сломанного" диска из массива
-
 ```
 [root@linuxraid mdadm]# mdadm /dev/md0 --remove /dev/sde
 mdadm: hot removed /dev/sde from /dev/md0
 ```
 - Добавление диска после замены
-
 ```
 [root@linuxraid mdadm]# mdadm /dev/md0 --add /dev/sde
 mdadm: added /dev/sde
@@ -255,7 +251,7 @@ for i in $(seq 1 5); do sudo mkfs.ext4 /dev/md0p$i; done
 mkdir -p /raid/part{1,2,3,4,5}
 for i in $(seq 1 5); do mount /dev/md0p$i /raid/part$i; done
 ```
-Проверяем:
+- Проверяем:
 ```
 [root@linuxraid mdadm]# df -h
 Filesystem      Size  Used Avail Use% Mounted on
@@ -327,7 +323,7 @@ sdg       linux_raid_member linuxraid:0 90556b45-cf87-085c-1d71-dd4159ea6c72
 - [Скрипт для создания рейда, GPT, создания разделов и их монтирования](create_raid10.sh)
 - [Конф.файл  для автосборки рейда при загрузке](mdadm.conf)
 
-Поверка после развертывания
+- Поверка после развертывания
 ```
 [vagrant@linuxraid10 ~]$ cat /proc/mdstat
 Personalities : [raid10] 
