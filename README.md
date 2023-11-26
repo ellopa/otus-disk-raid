@@ -200,7 +200,7 @@ mdadm: added /dev/sde
 - Проверка
 ```
 mdadm -D /dev/md0
-
+```
 ```
  Update Time : Sun Nov 26 07:55:01 2023
              State : clean 
@@ -224,8 +224,8 @@ Consistency Policy : resync
        6       8       64        3      active sync set-B   /dev/sde
        4       8       80        4      active sync set-A   /dev/sdf
        5       8       96        5      active sync set-B   /dev/sdg
- ```
-   
+```
+  
 ### Создать GPT-таблицу и 5 разделов, смонтировать их в системе
 
 - Создание таблицы разделов GPT на RAID
