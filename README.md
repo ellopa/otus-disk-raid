@@ -1,4 +1,4 @@
-###Дисковая подсистема. 
+### Дисковая подсистема 
 
 
 ### Увеличение количества дисков в Vagrantfile
@@ -121,7 +121,7 @@ Consistency Policy : resync
 • Events - количество событий обновления. 
 • Chunk Size (для RAID5) - размер блока в килобайтах, который пишется на разные диски. 
 
-###Создание конфигурационного файла mdadm.conf
+### Создание конфигурационного файла mdadm.conf
 -Просмотр информации
 ```
 [root@linuxraid ~]# mdadm --detail --scan --verbose
@@ -139,7 +139,7 @@ mdadm --detail --scan --verbose | awk '/ARRAY/ {print}' >> \ /etc/mdadm/mdadm.co
 DEVICE partitions
 ARRAY /dev/md0 level=raid10 num-devices=6 metadata=1.2 name=linuxraid:0 UUID=90556b45:cf87085c:1d71dd41:59ea6c72
 ```
-###Сломать/починить RAID
+### Сломать/починить RAID
 -Искусственно перевод в состояние fail 
 
 ```
